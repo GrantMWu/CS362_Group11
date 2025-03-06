@@ -39,7 +39,7 @@ def conv_endian(num, endian='big'):
         str: Converted hexadecimal number in specified notation.
     """
     # check if endian is valid value
-    if endian != 'big' or endian != 'little':
+    if endian != 'big' and endian != 'little':
         return None
 
     # check if number is positive or negative
@@ -47,9 +47,10 @@ def conv_endian(num, endian='big'):
     num = abs(num)
 
     # divide num by 16 until num = 0
-    # convert remainder into string and add to current string
     # when string is two digits long, append it to hex list
     # read hex list forwards or backwards depending on endianess
-
     hex_str = sign
     return hex_str
+
+
+print(conv_endian(954786, endian='big'))
