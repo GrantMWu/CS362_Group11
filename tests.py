@@ -52,6 +52,7 @@ class TestConvNum(unittest.TestCase):
     def test16(self):
         self.assertIsNone(conv_num('0x'))
 
+
 class TestMyDatetime(unittest.TestCase):
 
     def test1(self):
