@@ -9,7 +9,17 @@ def conv_num(num_str):
         int or float: Converted number if possible.
         None if string is invalid.
     """
-    pass
+    # Check if input is a valid string and not empty after stripping whitespace
+    if not isinstance(num_str, str) or not num_str.strip():
+        return None
+
+    num_str = num_str.strip()
+    # Check if the number is negative
+    is_negative = num_str.startswith('-')
+    if is_negative:
+        num_str = num_str[1:]
+
+    return None
 
 
 def my_datetime(num_sec):
