@@ -19,7 +19,7 @@ def conv_num(num_str):
     if is_negative:
         num_str = num_str[1:]
 
-        # Handle hexadecimal numbers
+    # Handle hexadecimal numbers
     if num_str.lower().startswith("0x"):
         hex_part = num_str[2:]  # Extract the hexadecimal part
         # Validate hexadecimal characters (only valid hex digits)
@@ -32,12 +32,37 @@ def conv_num(num_str):
                 value = ord(c) - ord('0')
             elif 'a' <= c.lower() <= 'f':
                 value = ord(c.lower()) - ord('a') + 10
-            else:
-                return None
             result += value * (16 ** i)
         return -result if is_negative else result
 
-    return None
+    # Validate decimal format (only one dot and all other characters must be digits)
+    if num_str.count('.') > 1 or not all(c.isdigit() or c == '.' for c in num_str):
+        return None
+
+    if '.' in num_str:
+        # Split the string at the decimal point
+        integer_part, decimal_part = num_str.split('.')
+        # Convert integer part manually
+        integer_value = 0
+        for i, c in enumerate(reversed(integer_part)):
+            if '0' <= c <= '9':
+                integer_value += (ord(c) - ord('0')) * (10 ** i)
+        # Convert decimal part manually
+        decimal_value = 0
+        for i, c in enumerate(decimal_part):
+            if '0' <= c <= '9':
+                decimal_value += (ord(c) - ord('0')) * (10 ** -(i + 1))
+        result = integer_value + decimal_value
+        return -result if is_negative else result
+
+    # Integer conversion manually
+    result = 0
+    for c in num_str:
+        if '0' <= c <= '9':
+            result = result * 10 + (ord(c) - ord('0'))
+        else:
+            return None
+    return -result if is_negative else result
 
 
 def my_datetime(num_sec):
