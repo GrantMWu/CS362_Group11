@@ -39,7 +39,7 @@ def conv_endian(num, endian='big'):
         str: Converted hexadecimal number in specified notation.
     """
     # check if endian is valid value
-    if endian != 'big' and endian != 'little':
+    if endian not in ('big', 'little'):
         return None
 
     # check if number is positive or negative
