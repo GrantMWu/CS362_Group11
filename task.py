@@ -19,6 +19,24 @@ def conv_num(num_str):
     if is_negative:
         num_str = num_str[1:]
 
+        # Handle hexadecimal numbers
+    if num_str.lower().startswith("0x"):
+        hex_part = num_str[2:]  # Extract the hexadecimal part
+        # Validate hexadecimal characters (only valid hex digits)
+        if not hex_part or any(c not in "0123456789abcdefABCDEF" for c in hex_part):
+            return None
+        # Convert hex string to integer manually
+        result = 0
+        for i, c in enumerate(reversed(hex_part)):
+            if '0' <= c <= '9':
+                value = ord(c) - ord('0')
+            elif 'a' <= c.lower() <= 'f':
+                value = ord(c.lower()) - ord('a') + 10
+            else:
+                return None
+            result += value * (16 ** i)
+        return -result if is_negative else result
+
     return None
 
 
