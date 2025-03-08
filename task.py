@@ -69,6 +69,21 @@ def my_datetime(num_sec):
 
     MONTH_DAY_COUNT = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
     SEC_PER_DAY = (24 * 60 * 60)
+    YEAR_SECS = (365 * SEC_PER_DAY)
+    FEB = 1
+    MAX_DAYS = 31
+
+    yr = 1970
+
+    # Set the year of the date.
+    while num_sec >= YEAR_SECS:
+        yr += 1
+        if _is_leap_year(yr):
+            num_sec -= (YEAR_SECS + SEC_PER_DAY)
+        else:
+            num_sec -= YEAR_SECS
+
+    is_leap_year = _is_leap_year(yr)
 
     month = 0
 
@@ -83,13 +98,34 @@ def my_datetime(num_sec):
         num_sec -= SEC_PER_DAY
         day += 1
 
+    # Add a day offset for first two months of the leap year.
+    if num_sec >= 0 and is_leap_year and month <= FEB and day <= MAX_DAYS:
+        day += 1
+
     # Format month, if month is a single digit.
     month = '{}'.format(month + 1) if month + 1 >= 10 else '0{}'.format(month + 1)
 
     # Format day, if day is a single digit.
     day = '{}'.format(day) if day >= 10 else '0{}'.format(day)
 
-    return '{}-{}-{}'.format(month, day, '1970')
+    return '{}-{}-{}'.format(month, day, yr)
+
+
+def _is_leap_year(year):
+    """
+    Determine if a given year is a leap year.
+
+    Args:
+        year (int): The year being considered.
+
+    Returns:
+        bool: True, if year is a leap year, otherwise False.
+    """
+    is_mod_4 = year % 4 == 0
+    is_mod_100 = year % 100 == 0
+    is_mod_400 = year % 400 == 0
+
+    return (is_mod_4 and not is_mod_100) or (is_mod_400 and is_mod_100)
 
 
 def conv_endian(num, endian='big'):
