@@ -76,6 +76,10 @@ class TestMyDatetime(unittest.TestCase):
         """Tests that 0 seconds returns 01-01-1970."""
         self.assertEqual(my_datetime(0), '01-01-1970')
 
+    def test2(self):
+        """Tests 1 day increment to 01-02-1970 at 12AM secs"""
+        self.assertEqual(my_datetime(86400), '01-02-1970')
+
 
 class TestConvEndian(unittest.TestCase):
     """Test conv_endian function"""
