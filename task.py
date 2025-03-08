@@ -28,15 +28,9 @@ def conv_num(num_str):
             return None
         # Convert hex string to integer manually
         result = 0
-        for i, c in enumerate(reversed(hex_part)):
+        for c in hex_part:
             # Convert each character to its decimal equivalent
-            if '0' <= c <= '9':
-                value = ord(c) - ord('0')
-            elif 'a' <= c.lower() <= 'f':
-                value = ord(c.lower()) - ord('a') + 10
-            else:
-                return None
-            result += value * (16 ** i)
+            result = result * 16 + (ord(c) - ord('0') if '0' <= c <= '9' else ord(c.lower()) - ord('a') + 10)
         return -result if is_negative else result
 
     # Validate decimal format (only one dot and all other characters must be digits)
@@ -48,22 +42,16 @@ def conv_num(num_str):
         # Split the string at the decimal point
         integer_part, decimal_part = num_str.split('.')
         # Convert the integer part manually
-        integer_value = 0
-        for i, c in enumerate(reversed(integer_part)):
-            if '0' <= c <= '9':
-                integer_value += (ord(c) - ord('0')) * (10 ** i)
-            else:
-                return None
+        integer_value = sum((ord(c) - ord('0')) * (10 ** i) for i, c in
+                            enumerate(reversed(integer_part))) if integer_part else 0
         # Convert the decimal part manually
-        decimal_value = 0
-        for i, c in enumerate(decimal_part):
-            if '0' <= c <= '9':
-                decimal_value += (ord(c) - ord('0')) * (10 ** -(i + 1))
-            else:
-                return None
+        decimal_value = sum((ord(c) - ord('0')) * (10 ** -(i + 1)) for i, c in
+                            enumerate(decimal_part)) if decimal_part else 0
         result = integer_value + decimal_value
         return -(result) if is_negative else result
 
+    # Process as integer if no decimal point is found
+    return (-1 if is_negative else 1) * sum((ord(c) - ord('0')) * (10 ** i) for i, c in enumerate(reversed(num_str)))
 
 def my_datetime(num_sec):
     """
