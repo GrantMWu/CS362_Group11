@@ -84,6 +84,10 @@ class TestMyDatetime(unittest.TestCase):
         """Tests 3-1 12AM in the first year."""
         self.assertEqual(my_datetime(5097600), '03-01-1970')
 
+    def test4(self):
+        """Tests Feb 29 12AM in the first leap year."""
+        self.assertEqual(my_datetime(68_169_600), '02-29-1972')
+
 
 class TestConvEndian(unittest.TestCase):
     """Test conv_endian function"""
