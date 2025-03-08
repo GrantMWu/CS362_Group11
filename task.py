@@ -38,4 +38,32 @@ def conv_endian(num, endian='big'):
     Returns:
         str: Converted hexadecimal number in specified notation.
     """
-    pass
+    # check if endian is valid value
+    if endian not in ('big', 'little'):
+        return None
+
+    # check if number is positive or negative
+    sign = '-' if num < 0 else ''
+    num = abs(num)
+    hex_bytes = []
+
+    # edge case of 0
+    if num == 0:
+        return '00'
+
+    # accumulate bytes into hex_bytes
+    while num > 0:
+        byte = ''
+        for i in range(2):
+            hex_dig = num % 16
+            hex_char = chr(hex_dig + 48) if hex_dig < 10 else chr(hex_dig + 55)
+            byte = hex_char + byte
+            num //= 16
+
+        hex_bytes.append(byte)
+
+    # adjust hex_bytes for endianess
+    if endian == 'big':
+        hex_bytes.reverse()
+
+    return sign + ' '.join(hex_bytes)
