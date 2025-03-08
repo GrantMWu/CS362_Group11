@@ -1,5 +1,5 @@
 import unittest
-from task import conv_num, conv_endian
+from task import conv_num, my_datetime, conv_endian
 
 
 class TestConvNum(unittest.TestCase):
@@ -67,6 +67,14 @@ class TestConvNum(unittest.TestCase):
     def test16(self):
         """Test incomplete hexadecimal string"""
         self.assertIsNone(conv_num('0x'))
+
+
+class TestMyDatetime(unittest.TestCase):
+    """Verifies that my_datetime computes the correct datetime from seconds"""
+
+    def test1(self):
+        """Tests that 0 seconds returns 01-01-1970."""
+        self.assertEqual(my_datetime(0), '01-01-1970')
 
 
 class TestConvEndian(unittest.TestCase):

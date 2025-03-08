@@ -64,7 +64,7 @@ def my_datetime(num_sec):
     Returns:
         str: Converted date with format MM-DD-YYYY.
     """
-    pass
+    return ''
 
 
 def conv_endian(num, endian='big'):
