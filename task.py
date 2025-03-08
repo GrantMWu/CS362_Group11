@@ -67,7 +67,17 @@ def my_datetime(num_sec):
     if num_sec == 0:
         return '01-01-1970'
 
-    return ''
+    SEC_PER_DAY = (24 * 60 * 60)
+    # Set the day of the month.
+    day = 1
+    while num_sec >= SEC_PER_DAY:
+        num_sec -= SEC_PER_DAY
+        day += 1
+
+    # Format day, if day is a single digit.
+    day = '{}'.format(day) if day >= 10 else '0{}'.format(day)
+
+    return '{}-{}-{}'.format('01', day, '1970')
 
 
 def conv_endian(num, endian='big'):
