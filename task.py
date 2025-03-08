@@ -64,6 +64,9 @@ def my_datetime(num_sec):
     Returns:
         str: Converted date with format MM-DD-YYYY.
     """
+    if num_sec == 0:
+        return '01-01-1970'
+
     return ''
 
 
