@@ -53,6 +53,7 @@ def conv_num(num_str):
     # Process as integer if no decimal point is found
     return (-1 if is_negative else 1) * sum((ord(c) - ord('0')) * (10 ** i) for i, c in enumerate(reversed(num_str)))
 
+
 def my_datetime(num_sec):
     """
     Convert number of seconds since epoch into a readable date.
