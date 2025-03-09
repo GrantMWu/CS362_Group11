@@ -1,5 +1,5 @@
 import unittest
-from task import conv_num, conv_endian
+from task import conv_num, my_datetime, conv_endian
 
 
 class TestConvNum(unittest.TestCase):
@@ -67,6 +67,62 @@ class TestConvNum(unittest.TestCase):
     def test16(self):
         """Test incomplete hexadecimal string"""
         self.assertIsNone(conv_num('0x'))
+
+
+class TestMyDatetime(unittest.TestCase):
+    """Verifies that my_datetime computes the correct datetime from seconds"""
+
+    def test1(self):
+        """Tests that 0 seconds returns 01-01-1970."""
+        self.assertEqual(my_datetime(0), '01-01-1970')
+
+    def test2(self):
+        """Tests 1 day increment to 01-02-1970 at 12AM secs"""
+        self.assertEqual(my_datetime(86400), '01-02-1970')
+
+    def test3(self):
+        """Tests 3-1 12AM in the first year."""
+        self.assertEqual(my_datetime(5097600), '03-01-1970')
+
+    def test4(self):
+        """Tests Feb 29 12AM in the first leap year."""
+        self.assertEqual(my_datetime(68_169_600), '02-29-1972')
+
+    def test5(self):
+        """Tests 1 day at 11:59PM secs"""
+        self.assertEqual(my_datetime(172799), '01-02-1970')
+
+    def test6(self):
+        """Tests date after first leap year."""
+        self.assertEqual(my_datetime(123456789), '11-29-1973')
+
+    def test7(self):
+        """Tests date of non-leap year well into the future."""
+        self.assertEqual(my_datetime(9876543210), '12-22-2282')
+
+    def test8(self):
+        """Tests Feb 29 of leap year well into the future."""
+        self.assertEqual(my_datetime(201653971200), '02-29-8360')
+
+    def test9(self):
+        """Tests the last second of a month in a year before next leap year."""
+        self.assertEqual(my_datetime(168134399), '04-30-1975')
+
+    def test10(self):
+        """Tests Feb 29 of the second leap year."""
+        self.assertEqual(my_datetime(194450000), '02-29-1976')
+
+    def test11(self):
+        """Tests last second of Feb 29 of the second leap year."""
+        self.assertEqual(my_datetime(194486399), '02-29-1976')
+
+    def test12(self):
+        """Tests first second of 3-1 of the second leap year."""
+        self.assertEqual(my_datetime(194486400), '03-01-1976')
+
+    def test13(self):
+        """Tests last second of 12-31 of the second leap year."""
+        self.assertEqual(my_datetime(220881599), '12-31-1976')
 
 
 class TestConvEndian(unittest.TestCase):

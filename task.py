@@ -64,7 +64,142 @@ def my_datetime(num_sec):
     Returns:
         str: Converted date with format MM-DD-YYYY.
     """
-    pass
+    # Set the year of the date.
+    num_sec, year = _increment_year(num_sec)
+
+    # Set the month of the year.
+    num_sec, month = _increment_month(num_sec)
+
+    # Set the day of the month.
+    num_sec, day = _increment_day(num_sec)
+
+    # Add a day offset for first two months of a leap year.
+    if _is_leap_year(year):
+        day = _add_offset_day(num_sec, month, day)
+
+    # Format month, if month is a single digit.
+    month = _format_single_digit(month + 1)
+
+    # Format day, if day is a single digit.
+    day = _format_single_digit(day)
+
+    return '{}-{}-{}'.format(month, day, year)
+
+
+def _add_offset_day(num_sec, month, day):
+    """
+    Conditionally increment the day of a leap year.
+
+    Args:
+        num_sec (int): Number of seconds remaining in date calculation.
+        month (int): The month of the year.
+        day (int): The day of the month to increment.
+
+    Returns:
+        int: The incremented day of a leap year.
+    """
+    FEB = 1
+    MAX_DAYS = 29
+
+    if num_sec >= 0 and month <= FEB and day <= MAX_DAYS:
+        day += 1
+
+    return day
+
+
+def _increment_year(num_sec):
+    """
+    Increment the year, starting in 1970, with the given number of seconds.
+
+    Args:
+        num_sec (int): Number of seconds with which to increment the year.
+
+    Returns:
+        Tuple: (Adjusted num_sec, incremented year).
+    """
+    SEC_PER_DAY = (24 * 60 * 60)
+    YEAR_SECS = (365 * SEC_PER_DAY)
+    year = 1970
+
+    while num_sec >= YEAR_SECS:
+        year += 1
+        if _is_leap_year(year):
+            num_sec -= (YEAR_SECS + SEC_PER_DAY)
+        else:
+            num_sec -= YEAR_SECS
+
+    return num_sec, year
+
+
+def _increment_month(num_sec):
+    """
+    Increment the month with the given number of seconds.
+
+    Args:
+        num_sec (int): Number of seconds with which to increment the month.
+
+    Returns:
+        Tuple: (Adjusted num_sec, incremented month).
+    """
+    MONTH_DAY_COUNT = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    SEC_PER_DAY = (24 * 60 * 60)
+    month = 0
+
+    while num_sec >= (MONTH_DAY_COUNT[month] * SEC_PER_DAY):
+        num_sec -= (MONTH_DAY_COUNT[month] * SEC_PER_DAY)
+        month += 1
+
+    return num_sec, month
+
+
+def _increment_day(num_sec):
+    """
+    Increment the day with the given number of seconds.
+
+    Args:
+        num_sec (int): Number of seconds with which to increment the day.
+
+    Returns:
+        Tuple: (Adjusted num_sec, incremented day).
+    """
+    SEC_PER_DAY = (24 * 60 * 60)
+    day = 1
+
+    while num_sec >= SEC_PER_DAY:
+        num_sec -= SEC_PER_DAY
+        day += 1
+
+    return num_sec, day
+
+
+def _is_leap_year(year):
+    """
+    Determine if a given year is a leap year.
+
+    Args:
+        year (int): The year being considered.
+
+    Returns:
+        bool: True, if year is a leap year, otherwise False.
+    """
+    is_mod_4 = year % 4 == 0
+    is_mod_100 = year % 100 == 0
+    is_mod_400 = year % 400 == 0
+
+    return (is_mod_4 and not is_mod_100) or (is_mod_400 and is_mod_100)
+
+
+def _format_single_digit(digit):
+    """
+    Format a digit as a string, depending on if it's a single digit.
+
+    Args:
+        digit (int): The digit being formatted.
+
+    Returns:
+        string: A formatted string with the adjusted digit.
+    """
+    return '{}'.format(digit) if digit >= 10 else '0{}'.format(digit)
 
 
 def conv_endian(num, endian='big'):
