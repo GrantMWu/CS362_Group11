@@ -24,34 +24,54 @@ def conv_num(num_str):
     if num_str.lower().startswith("0x"):
         hex_part = num_str[2:]  # Extract the hexadecimal part
         # Validate hexadecimal characters
-        if not hex_part or any(c not in "0123456789abcdefABCDEF" for c in hex_part):
+        invalid_digs = any(c not in "0123456789abcdefABCDEF" for c in hex_part)
+        if not hex_part or invalid_digs:
             return None
         # Convert hex string to integer manually
         result = 0
         for c in hex_part:
             # Convert each character to its decimal equivalent
-            result = result * 16 + (ord(c) - ord('0') if '0' <= c <= '9' else ord(c.lower()) - ord('a') + 10)
+            if '0' <= c <= '9':
+                digit = ord(c) - ord('0')
+            else:
+                digit = ord(c.lower()) - ord('a') + 10
+            result = result * 16 + digit
         return -result if is_negative else result
 
-    # Validate decimal format (only one dot and all other characters must be digits)
-    if num_str.count('.') > 1 or not all(c.isdigit() or c == '.' for c in num_str):
+    # Validate decimal format
+    multiple_decimal = num_str.count('.') > 1
+    valid_digits = all(c.isdigit() or c == '.' for c in num_str)
+
+    if multiple_decimal or not valid_digits:
         return None
 
     # Convert to float if it contains a decimal point
     if '.' in num_str:
         # Split the string at the decimal point
         integer_part, decimal_part = num_str.split('.')
+
         # Convert the integer part manually
-        integer_value = sum((ord(c) - ord('0')) * (10 ** i) for i, c in
-                            enumerate(reversed(integer_part))) if integer_part else 0
+        integer_value = sum(
+            (ord(c) - ord('0')) * (10 ** i)
+            for i, c in enumerate(reversed(integer_part))
+        ) if integer_part else 0
+
         # Convert the decimal part manually
-        decimal_value = sum((ord(c) - ord('0')) * (10 ** -(i + 1)) for i, c in
-                            enumerate(decimal_part)) if decimal_part else 0
+        decimal_value = sum(
+            (ord(c) - ord('0')) * (10 ** -(i + 1))
+            for i, c in enumerate(decimal_part)
+        ) if decimal_part else 0
+
         result = integer_value + decimal_value
-        return -(result) if is_negative else result
+        return -result if is_negative else result
 
     # Process as integer if no decimal point is found
-    return (-1 if is_negative else 1) * sum((ord(c) - ord('0')) * (10 ** i) for i, c in enumerate(reversed(num_str)))
+    integer_value = sum(
+        (ord(c) - ord('0')) * (10 ** i)
+        for i, c in enumerate(reversed(num_str))
+    )
+
+    return -integer_value if is_negative else integer_value
 
 
 def my_datetime(num_sec):
